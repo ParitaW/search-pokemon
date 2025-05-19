@@ -8,8 +8,7 @@ export default function Home() {
   const searchParams = useSearchParams();
   const searchName = searchParams.get("search");
   return (
-    // <h1 className="center">Test</h1>
-    <div>
+    <div className="flex flex-col items-center">
       <Image
         className="mb-5"
         src="/pokemon.png"
@@ -21,9 +20,8 @@ export default function Home() {
       {searchName ? (
         <SearchResult name={searchName} />
       ) : (
-        <p>Search for a Pokemon</p>
+       <></>
       )}
-      {/* <SearchResult name="test"/> */}
     </div>
   );
 }
