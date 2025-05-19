@@ -2,6 +2,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_POKEMON_BY_NAME } from "../graphql/queries";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
   name: string;
@@ -11,13 +12,15 @@ const SearchResult = ({ name }: Props) => {
   const { data, loading, error } = useQuery(GET_POKEMON_BY_NAME, {
     variables: { name },
   });
+  const router = useRouter();
 
   if (loading) return <p className="text-center">Loading...</p>;
-  if (error || !data?.pokemon) return <p className="text-center text-red-500">Pokemon not found</p>;
+  if (error || !data?.pokemon)
+    return <p className="text-center text-red-500">Pokemon not found</p>;
   const { pokemon } = data;
   return (
     <div className="mt-6 p-6  bg-gray-100 rounded-lg shadow-md">
-     <div className="flex flex-col md:flex-row items-start gap-6">
+      <div className="flex flex-col md:flex-row items-start gap-6">
         {/* Pokemon Image */}
         <Image
           src={pokemon.image}
@@ -69,15 +72,21 @@ const SearchResult = ({ name }: Props) => {
           </div>
 
           {/* Evolutions */}
-          {pokemon.evolutions.length > 0 && (
+          {pokemon.evolutions && pokemon.evolutions.length > 0 && (
             <div className="mt-4">
-              <h3 className="text-lg font-semibold text-gray-700">Evolutions</h3>
+              <h3 className="text-lg font-semibold text-gray-700">
+                Evolutions
+              </h3>
               <ul className="list-disc list-inside text-gray-600">
-                {pokemon.evolutions.map(
-                  (evo: { id: string; name: string }) => (
-                    <li key={evo.id}>{evo.name}</li>
-                  )
-                )}
+                {pokemon.evolutions.map((evo: { id: string; name: string }) => (
+                  <li
+                    key={evo.id}
+                    className="text-blue-500 cursor-pointer hover:underline"
+                    onClick={() => router.push(`/?search=${evo.name}`)}
+                  >
+                    {evo.name}
+                  </li>
+                ))}
               </ul>
             </div>
           )}
